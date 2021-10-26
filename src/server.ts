@@ -3,8 +3,17 @@ import express from 'express';
 const app = express();
 const port = 3000;
 
-app.get('/', (_req, res) => {
-  res.send('Hello World!');
+app.get('/api/users/:name', (request, response) => {
+  response.send(request.params);
+});
+
+app.get('/api/users', (_request, response) => {
+  const users = ['Paul', 'Samet', 'Julia'];
+  response.send(users);
+});
+
+app.get('/', (_request, response) => {
+  response.send('Hallo Welt!');
 });
 
 app.listen(port, () => {
