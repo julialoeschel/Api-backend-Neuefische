@@ -20,21 +20,14 @@ const users = [
   },
   {
     name: 'Julia',
-    username: 'phgrtz',
+    username: 'JuLÖ',
     password: 'pw123!',
   },
 ];
 
-app.use(express.json());
+const model = { logesInUser: {} };
 
-app.get('/api/users/:username', (request, response) => {
-  const user = users.find((user) => user.username === request.params.username);
-  if (user) {
-    response.send(user);
-  } else {
-    response.status(404).send('does not exist');
-  }
-});
+app.use(express.json());
 
 app.delete('/api/users/:username', (request, response) => {
   const username = request.params.username;
@@ -46,15 +39,52 @@ app.delete('/api/users/:username', (request, response) => {
     response.status(404).send(`Sorry can't find that!`);
   }
 });
-
+// gibts den user mit den daten schon??
 app.post('/api/users', (request, response) => {
   const newUser = request.body;
-  // users.splice(users.length, 0, newUser.name);
+  if (newUser.name !== 'String' || !newUser.username || !newUser.password) {
+    response.status(400).send(`Missing property`);
+    return;
+  }
   if (users.some((user) => user.username === newUser.username)) {
     response.status(409).send(`aleady existst`);
   } else {
     users.push(newUser);
+    // users.splice(users.length, 0, newUser.name);
     response.send(`${newUser.name} added`);
+  }
+});
+
+// user und passwort abfragen
+app.post('/api/login', (request, response) => {
+  const userLogin = request.body;
+  const findUser = users.find(
+    (user) =>
+      user.username === userLogin.username &&
+      user.password === userLogin.password
+  );
+  if (findUser) {
+    model.logesInUser = findUser;
+    response.send(`Herzlich willkommen ${findUser.name}!!!`);
+  }
+  response.status(401).send(`password or username is wrong`);
+});
+
+app.get('/api/me', (_request, response) => {
+  response.send(model.logesInUser);
+});
+
+app.post('/api/logout', (_request, response) => {
+  model.logesInUser = {};
+  response.send('you are logged out');
+});
+
+app.get('/api/users/:username', (request, response) => {
+  const user = users.find((user) => user.username === request.params.username);
+  if (user) {
+    response.send(user);
+  } else {
+    response.status(404).send('does not exist');
   }
 });
 
