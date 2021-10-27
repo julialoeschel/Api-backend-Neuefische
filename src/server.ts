@@ -1,4 +1,5 @@
 import express from 'express';
+import cookieParser from 'cookie-parser';
 
 const app = express();
 const port = 3000;
@@ -20,14 +21,15 @@ const users = [
   },
   {
     name: 'Julia',
-    username: 'JuLÖ',
+    username: 'JuLoe',
     password: 'pw123!',
   },
 ];
 
-const model = { logesInUser: {} };
-
 app.use(express.json());
+
+// Middleware for parsing cookies
+app.use(cookieParser());
 
 app.delete('/api/users/:username', (request, response) => {
   const username = request.params.username;
@@ -42,7 +44,7 @@ app.delete('/api/users/:username', (request, response) => {
 // gibts den user mit den daten schon??
 app.post('/api/users', (request, response) => {
   const newUser = request.body;
-  if (newUser.name !== 'String' || !newUser.username || !newUser.password) {
+  if (!newUser.name || !newUser.username || !newUser.password) {
     response.status(400).send(`Missing property`);
     return;
   }
@@ -64,18 +66,27 @@ app.post('/api/login', (request, response) => {
       user.password === userLogin.password
   );
   if (findUser) {
-    model.logesInUser = findUser;
+    response.setHeader('Set-Cookie', `username=${findUser.username}`);
     response.send(`Herzlich willkommen ${findUser.name}!!!`);
+  } else {
+    response.status(401).send(`password or username is wrong`);
   }
-  response.status(401).send(`password or username is wrong`);
 });
 
-app.get('/api/me', (_request, response) => {
-  response.send(model.logesInUser);
+app.get('/api/me', (request, response) => {
+  //const cookie = request.headers.cookie;
+  const username = request.cookies.username;
+  console.log(request.headers.cookie);
+  const foundUser = users.find((user) => user.username === username);
+  if (foundUser) {
+    response.send(foundUser);
+  } else {
+    response.status(404).send('User not found');
+  }
 });
 
 app.post('/api/logout', (_request, response) => {
-  model.logesInUser = {};
+  //do smth
   response.send('you are logged out');
 });
 
