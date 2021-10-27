@@ -86,7 +86,7 @@ app.get('/api/me', (request, response) => {
 });
 
 app.post('/api/logout', (_request, response) => {
-  //do smth
+  response.setHeader('Set-Cookie', ``);
   response.send('you are logged out');
 });
 
