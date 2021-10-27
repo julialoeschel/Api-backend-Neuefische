@@ -19,6 +19,17 @@ app.get('/api/users/:name', (request, response) => {
   }
 });
 
+app.delete('/api/users/:name', (request, response) => {
+  const name = request.params.name;
+  if (users.includes(name)) {
+    const indexOfName = users.findIndex((nameWanted) => nameWanted === name);
+    users.splice(indexOfName, 1);
+    response.send(users);
+  } else {
+    response.status(404).send(`Sorry can't find that!`);
+  }
+});
+
 app.get('/api/users', (_request, response) => {
   response.send(users);
 });
