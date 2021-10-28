@@ -1,32 +1,33 @@
+
+
+###get users from DB
 GET http://localhost:3000/api/users HTTP/1.1
 
-### get single user
-
-GET http://localhost:3000/api/users/JuLoe HTTP/1.1
+### get if single user exsists
+GET http://localhost:3000/api/users/Julia HTTP/1.1
 
 ### GET a single user which doesn't exist
-
 GET http://localhost:3000/api/users/noelNotExist HTTP/1.1
 
-###
-DELETE  http://localhost:3000/api/users/AlexZZ HTTP/1.1
+### delete user
+DELETE  http://localhost:3000/api/users/FE9000 HTTP/1.1
 
-### a User
+### add a User to dB
 POST http://localhost:3000/api/users HTTP/1.1
 Content-Type: application/json
 
 {
-    "name": "Lisa",
-    "username": "samTTshdg",
-    "password": "pw3423!"
+    "name": "Samet",
+    "username": "UswrSamet",
+    "password": "SrrtSamet123"
 }
 ### LOGIN  username und passwort abfragen/ 
 POST http://localhost:3000/api/login HTTP/1.1
 Content-Type: application/json
 
 {
-    "username": "Patrick123123",
-    "password": "123abc"
+    "username": "UswrSamet",
+    "password": "SrrtSamet123"
 }
 
 ### PROFILE seite eines users / meine Seite
