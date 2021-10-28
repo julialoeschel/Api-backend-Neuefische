@@ -10,42 +10,44 @@ if (!process.env.KEY_URL_MONGOBD)
 
 const app = express();
 const port = 3000;
-const users = [
-  {
-    name: 'Patrick',
-    username: 'Patrick123123',
-    password: '123abc',
-  },
-  {
-    name: 'Alex',
-    username: 'AlexZZ',
-    password: 'asdc',
-  },
-  {
-    name: 'Felix',
-    username: 'FE9000',
-    password: 'ab',
-  },
-  {
-    name: 'Julia',
-    username: 'JuLoe',
-    password: 'pw123!',
-  },
-];
+// const users = [
+//   {
+//     name: 'Patrick',
+//     username: 'Patrick123123',
+//     password: '123abc',
+//   },
+//   {
+//     name: 'Alex',
+//     username: 'AlexZZ',
+//     password: 'asdc',
+//   },
+//   {
+//     name: 'Felix',
+//     username: 'FE9000',
+//     password: 'ab',
+//   },
+//   {
+//     name: 'Julia',
+//     username: 'JuLoe',
+//     password: 'pw123!',
+//   },
+// ];
 
 app.use(express.json());
 
 // Middleware for parsing cookies
 app.use(cookieParser());
 
-app.delete('/api/users/:username', (request, response) => {
+app.delete('/api/users/:username', async (request, response) => {
   const username = request.params.username;
-  const indexOfName = users.map((user) => user.username).indexOf(username);
-  if (indexOfName !== -1) {
-    users.splice(indexOfName, 1);
-    response.send(users);
+  const isUserThere = await getUserCollection().findOne({
+    username: username,
+  });
+  if (!isUserThere) {
+    response.send(`${username} dosnt exist`);
   } else {
-    response.status(404).send(`Sorry can't find that!`);
+    await getUserCollection().deleteOne({ username: username });
+    response.send(`${username} deleted`);
   }
 });
 
