@@ -4,13 +4,13 @@
 GET http://localhost:3000/api/users HTTP/1.1
 
 ### get if single user exsists
-GET http://localhost:3000/api/users/Julia HTTP/1.1
+GET http://localhost:3000/api/users/JuLoe HTTP/1.1
 
 ### GET a single user which doesn't exist
 GET http://localhost:3000/api/users/noelNotExist HTTP/1.1
 
 ### delete user
-DELETE  http://localhost:3000/api/users/FE9000 HTTP/1.1
+DELETE  http://localhost:3000/api/users/UswrSamet HTTP/1.1
 
 ### add a User to dB
 POST http://localhost:3000/api/users HTTP/1.1

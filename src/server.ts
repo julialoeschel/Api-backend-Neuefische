@@ -10,28 +10,6 @@ if (!process.env.KEY_URL_MONGOBD)
 
 const app = express();
 const port = 3000;
-// const users = [
-//   {
-//     name: 'Patrick',
-//     username: 'Patrick123123',
-//     password: '123abc',
-//   },
-//   {
-//     name: 'Alex',
-//     username: 'AlexZZ',
-//     password: 'asdc',
-//   },
-//   {
-//     name: 'Felix',
-//     username: 'FE9000',
-//     password: 'ab',
-//   },
-//   {
-//     name: 'Julia',
-//     username: 'JuLoe',
-//     password: 'pw123!',
-//   },
-// ];
 
 app.use(express.json());
 
@@ -86,6 +64,7 @@ app.post('/api/login', async (request, response) => {
   }
 });
 
+// show profile page
 app.get('/api/me', async (request, response) => {
   //const cookie = request.headers.cookie;
   const cookieName = request.cookies.username;
@@ -100,11 +79,13 @@ app.get('/api/me', async (request, response) => {
   }
 });
 
+// logout, but not working with DB
 app.post('/api/logout', async (_request, response) => {
   response.setHeader('Set-Cookie', ``);
   response.send('you are logged out');
 });
 
+// gibt es den username schon?
 app.get('/api/users/:username', async (request, response) => {
   const username = request.params.username;
   const existingUser = await getUserCollection().findOne({ username });
@@ -117,6 +98,7 @@ app.get('/api/users/:username', async (request, response) => {
   }
 });
 
+// zeige alles auf der DB
 app.get('/api/users', async (_request, response) => {
   const userDoc = await getUserCollection().find().toArray();
   response.send(userDoc);
